@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>claex</title>
+</head>
+
+<header>
+     <img class="microscopico" src="https://img.icons8.com/?size=100&id=8113&format=png&color=000000" width="30px" alt="menu">
+    
+    <a href="listar_sala.html"><img style="width: 40px; border-radius: 50%; height: 40px;" src="https://bkpsitecpsnew.blob.core.windows.net/uploadsitecps/sites/197/2024/12/centro-paula-souza.jpg" alt="fotinha"></a>
+</header>
+
+<main>
+     <div id="side-menu">
+    <div class="bars">
+        <div class="menu-bar"></div>
+        <div class="menu-bar"></div>
+        <div class="menu-bar"></div>
+    </div>
+
+    <a href="index.html" class="side-link">🏠 Início</a>
+    <a href="form_login.html?tipo=entrar" class="side-link">🔑 Login</a>
+    <a href="listar_sala.html" class="side-link">📚 Salas</a>
+    <a href="form_nova_sala.html" class="side-link">➕forma sala</a>
+    <a href="config_sala.html" class="side-link">⚙️config sala</a>
+    <script>
+const bars = document.querySelector(".bars");
+const menu = document.querySelector("#side-menu");
+
+bars.addEventListener("click", () => {
+    menu.classList.toggle("open");
+});
+</script>
+</div>
+    <section>
+        
+        <div id="form_nova_sala">
+            <article class="flex_colunm">
+            <label>Nome da sala: <input type="text" ></label><br>
+            <label>Duração de uma aula: <input type="text"></label><br>
+            <label>Duração do intervalo: <input type="text"></label>
+            </article>
+            <article>
+                <div>
+                    <h3>adcionar matéria</h3>
+                    <label>Matéria: <input type="text"></label>
+                    <label>Professor: <input type="text"></label>
+                </div>
+            </article>
+            <a href="listar_sala.html"><button type="button" class="submit">Criar sala</button></a>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-brand">
+            CLAEX
+        </div>
+        <div class="footer-links">
+            <div class="footer-col">
+                <h4>Sobre</h4>
+                <a href="#">Quem Somos</a>
+                <a href="#">Contato</a>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <a href="#">Termos de Uso</a>
+                <a href="#">Política de Privacidade</a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2025 CLAEX. Todos os direitos reservados.
+    </div>
+    <link rel="stylesheet" href="css/style.css">
+</footer>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>claex</title>
+    <style>
+          #msg-erro {
+            display: none;
+            background-color: #fdecea;
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%       { transform: translateX(-8px); }
+            40%       { transform: translateX(8px); }
+            60%       { transform: translateX(-5px); }
+            80%       { transform: translateX(5px); }
+        }
+        .shake {
+            animation: shake 0.4s ease;
+        }
+
+        .submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <section id="sect_login">
+            <article class="flex_colunm">
+                <img id="img_login" src="https://img.icons8.com/?size=100&id=TDMY9h1UHdNW&format=png&color=000000" alt="">
+                <h1 id="sumir">Bem-vindo a claex!</h1>
+            </article>
+            <article class="flex_colunm">
+                <h1>CLAEX</h1>
+
+                <!-- Cadastro -->
+                <div id="formulario_login">
+                    <input type="text" id="nome" placeholder="nome">
+                    <input type="text" id="email" placeholder="email">
+                    <input type="password" id="senha" placeholder="senha">
+                    <select id="tipo" name="tipo">
+                        <option value="escola">Escola</option>
+                        <option value="professor">Professor</option>
+                        <option value="aluno">Aluno</option>
+                    </select>
+
+                    <button type="button" class="submit">Cadastrar</button>
+                </div>
+
+                <p>Possui uma conta? <a href="form_login.html">clique aqui</a></p>
+            </article>
+        </section>
+    </main>
+</body>
+
+<script>
+    // ==========================================
+    // URL DA API
+    // ==========================================
+    const api = "/form_cadastro-html";
+
+    // ==========================================
+    // CADASTRAR USUÁRIO
+    // ==========================================
+    document.querySelector(".submit").addEventListener("click", async function () {
+
+        // Captura os valores dos inputs
+        const nome  = document.getElementById("nome").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const senha = document.getElementById("senha").value.trim();
+        const tipo  = document.getElementById("tipo").value;
+
+        // Validação simples
+        if (nome === "" || email === "" || senha === "") {
+            alert("Preencha todos os campos!");
+            return;
+        }
+
+        // Cria os dados para envio (form-urlencoded, compatível com @RequestParam)
+        const dados = new URLSearchParams();
+        dados.append("nome",  nome);
+        dados.append("email", email);
+        dados.append("senha", senha);
+        dados.append("tipo",  tipo);
+
+        try {
+            // Envia para o Spring Boot
+            const response = await fetch(`${api}/salvar`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: dados
+            });
+
+            if (response.ok) {
+                alert("Cadastro realizado com sucesso!");
+
+                // Limpa formulário
+                
+                window.location.href = "form_login.html";
+
+            } else {
+                const msg = await response.text();
+                alert("Erro ao cadastrar: " + msg);
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("Erro na conexão com o servidor!");
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>claex</title>
+</head>
+
+<header>
+    <div id="side-menu">
+    <div class="bars">
+        <div class="menu-bar"></div>
+        <div class="menu-bar"></div>
+        <div class="menu-bar"></div>
+    </div>
+
+    <a href="index.html" class="side-link">🏠 Início</a>
+    <a href="form_login.html?tipo=entrar" class="side-link">🔑 Login</a>
+    <a href="listar_sala.html" class="side-link">📚 Salas</a>
+    <a href="form_nova_sala.html" class="side-link">➕forma sala</a>
+    <a href="config_sala.html" class="side-link">⚙️config sala</a>
+    <a href="tabela_de_cadastro.html" class="side-link">tabela cadastros</a>
+    <script>
+const bars = document.querySelector(".bars");
+const menu = document.querySelector("#side-menu");
+
+bars.addEventListener("click", () => {
+    menu.classList.toggle("open");
+});
+</script>
+</div>
+    
+    <img class="microscopico" src="https://img.icons8.com/?size=100&id=8113&format=png&color=000000" width="30px" alt="menu">
+    
+    <a href="listar_sala.html"><img style="width: 40px; border-radius: 50%; height: 40px;" src="https://bkpsitecpsnew.blob.core.windows.net/uploadsitecps/sites/197/2024/12/centro-paula-souza.jpg" alt="fotinha"></a>
+</header>
+
+<section id="painel">
+    <img src="https://bkpsitecpsnew.blob.core.windows.net/uploadsitecps/sites/197/2024/12/centro-paula-souza.jpg" alt="">
+    <article>
+        <h1>Olá</h1>
+        <p>Professores: </p>
+        <p>salas: </p>
+    </article>
+</section>
+
+<main>
+    
+    <div class="link_nova_sala">
+        <div style="width: 1px;"></div>
+        <h1 class="align-center">Escolha uma sala</h1>
+        <a href="form_nova_sala.html"><button>+ nova sala</button></a>
+    </div>
+    
+    <section id="salas_user">
+        <a href="grade.html">
+            <article class="caixa_sala vermelho">
+                <p>Sala 1</p>
+            </article>
+        </a>
+        <a href="grade.html">
+            <article class="caixa_sala vermelho">
+                <p>Sala 2</p>
+            </article>
+        </a>
+        <a href="grade.html">
+            <article class="caixa_sala vermelho">
+                <p>Sala 3</p>
+            </article>
+        </a>
+        <a href="grade.html">
+            <article class="caixa_sala vermelho">
+                <p>Sala 4</p>
+            </article>
+        </a>
+    </section>
+</main>
+<footer>
+    <div class="footer-content">
+        <div class="footer-brand">
+            CLAEX
+        </div>
+        <div class="footer-links">
+            <div class="footer-col">
+                <h4>Sobre</h4>
+                <a href="#">Quem Somos</a>
+                <a href="#">Contato</a>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <a href="#">Termos de Uso</a>
+                <a href="#">Política de Privacidade</a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2025 CLAEX. Todos os direitos reservados.
+    </div>
+    <link rel="stylesheet" href="css/style.css">
+</footer>

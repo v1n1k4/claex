@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Professores</title>
+    <header>
+        <header>
+     
+    <div id="side-menu">
+    <div class="bars">
+        <div class="menu-bar"></div>
+        <div class="menu-bar"></div>
+        <div class="menu-bar"></div>
+    </div>
+
+    <a href="index.html" class="side-link">🏠 Início</a>
+    <a href="form_login.html?tipo=entrar" class="side-link">🔑 Login</a>
+    <a href="listar_sala.html" class="side-link">📚 Salas</a>
+    <a href="form_nova_sala.html" class="side-link">➕forma sala</a>
+    <a href="config_sala.html" class="side-link">⚙️config sala</a>
+    <a href="tabela_de_cadastro.html" class="side-link">tabela cadastros</a>
+    <script>
+const bars = document.querySelector(".bars");
+const menu = document.querySelector("#side-menu");
+
+bars.addEventListener("click", () => {
+    menu.classList.toggle("open");
+});
+</script>
+    </header>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: rgb(212, 212, 212);
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 0 10px rgb(90, 90, 90);
+        }
+
+        h1 {
+            text-align: center;
+            color: rgb(0, 0, 160);
+            margin-bottom: 25px;
+        }
+
+        /* ---- MODAL ---- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.aberto { display: flex; }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            padding: 32px 28px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            position: relative;
+        }
+
+        .modal h2 {
+            color: rgb(0,0,160);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .modal-fechar {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #555;
+            width: auto;
+            padding: 0;
+        }
+        .modal-fechar:hover { color: #c0392b; }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: rgb(0,0,160);
+        }
+
+        .senha-hint {
+            font-size: 12px;
+            color: #888;
+            margin-top: -8px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn-salvar {
+            background-color: rgb(0,0,160);
+            color: white;
+            flex: 1;
+        }
+        .btn-salvar:hover { background-color: rgb(0,0,120); }
+
+        .btn-cancelar {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+        .btn-cancelar:hover { background-color: #ccc; }
+
+        /* ---- TOPO DA TABELA ---- */
+        .topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .topo input[type="text"] {
+            padding: 9px 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 260px;
+        }
+
+        .btn-novo {
+            background-color: rgb(0,0,160);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .btn-novo:hover { background-color: rgb(0,0,120); }
+
+        /* ---- TABELA ---- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #2a4d69;
+            color: white;
+            padding: 12px 10px;
+            text-align: left;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover td { background-color: #f5f7ff; }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+        .badge-professor { background: #d4edff; color: #0057a8; }
+        .badge-aluno     { background: #d4f4dd; color: #1a7a3a; }
+        .badge-escola    { background: #fff0d4; color: #a85e00; }
+
+        .btn-acao {
+            padding: 5px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .btn-editar  { background: #e8f0fe; color: #1a4fc6; margin-right: 6px; }
+        .btn-editar:hover  { background: #c8d8fc; }
+        .btn-excluir { background: #fde8e8; color: #c0392b; }
+        .btn-excluir:hover { background: #f9c0c0; }
+
+        /* ---- TOAST ---- */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: #2a4d69;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 8px;
+            font-size: 14px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 200;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.erro { background: #c0392b; }
+
+        .sem-dados {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+            font-style: italic;
+        }
+
+        #loading {
+            text-align: center;
+            color: #888;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📋 Cadastro de Professores</h1>
+
+    <div class="topo">
+        <input type="text" id="busca" placeholder="🔍 Filtrar por nome ou email..." oninput="filtrarTabela()">
+        <button class="btn-novo" onclick="abrirModalNovo()">+ Novo Cadastro</button>
+    </div>
+
+    <div id="loading">Carregando...</div>
+
+    <table id="tabela" style="display:none">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Tipo</th>
+                <th>Editar</th>
+                <th>Excluir</th>
+            </tr>
+        </thead>
+        <tbody id="corpo"></tbody>
+    </table>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="fecharModalFora(event)">
+    <div class="modal">
+        <button class="modal-fechar" onclick="fecharModal()">✕</button>
+        <h2 id="modalTitulo">Novo Cadastro</h2>
+
+        <div class="form-group">
+            <input type="hidden" id="editId">
+            <input type="text"   id="editNome"  placeholder="Nome completo" required>
+            <input type="email"  id="editEmail" placeholder="Email" required>
+            <input type="password" id="editSenha" placeholder="Senha">
+            <span class="senha-hint" id="senhaHint"></span>
+            <select id="editTipo">
+                <option value="escola">Escola</option>
+                <option value="professor">Professor</option>
+                <option value="aluno">Aluno</option>
+            </select>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-salvar" onclick="salvarEdicao()">Salvar</button>
+            <button class="btn btn-cancelar" onclick="fecharModal()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+    const api = "/form_cadastro-html";
+    let todosUsuarios = [];
+
+    // ── LISTAR ──────────────────────────────────────────────────
+    async function listar() {
+        try {
+            const res = await fetch(`${api}/listar`);
+            if (!res.ok) throw new Error("Erro ao buscar dados");
+            todosUsuarios = await res.json();
+            renderTabela(todosUsuarios);
+        } catch (e) {
+            mostrarToast("Erro ao carregar dados: " + e.message, true);
+        } finally {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("tabela").style.display = "table";
+        }
+    }
+
+    function renderTabela(lista) {
+        const corpo = document.getElementById("corpo");
+        if (lista.length === 0) {
+            corpo.innerHTML = `<tr><td colspan="6" class="sem-dados">Nenhum cadastro encontrado.</td></tr>`;
+            return;
+        }
+        corpo.innerHTML = lista.map(u => `
+            <tr>
+                <td>${u.id}</td>
+                <td>${escHtml(u.nome)}</td>
+                <td>${escHtml(u.email)}</td>
+                <td><span class="badge badge-${u.tipo}">${u.tipo}</span></td>
+                <td><button class="btn-acao btn-editar" onclick="abrirModalEditar(${u.id})">✏️ Editar</button></td>
+                <td><button class="btn-acao btn-excluir" onclick="excluir(${u.id})">🗑️ Excluir</button></td>
+            </tr>
+        `).join("");
+    }
+
+    // ── FILTRO ──────────────────────────────────────────────────
+    function filtrarTabela() {
+        const termo = document.getElementById("busca").value.toLowerCase();
+        const filtrado = todosUsuarios.filter(u =>
+            u.nome.toLowerCase().includes(termo) ||
+            u.email.toLowerCase().includes(termo)
+        );
+        renderTabela(filtrado);
+    }
+
+    // ── MODAL NOVO ──────────────────────────────────────────────
+    function abrirModalNovo() {
+        document.getElementById("modalTitulo").textContent = "Novo Cadastro";
+        document.getElementById("editId").value = "";
+        document.getElementById("editNome").value = "";
+        document.getElementById("editEmail").value = "";
+        document.getElementById("editSenha").value = "";
+        document.getElementById("editSenha").placeholder = "Senha";
+        document.getElementById("senhaHint").textContent = "";
+        document.getElementById("editTipo").value = "professor";
+        document.getElementById("modalOverlay").classList.add("aberto");
+    }
+
+    // ── MODAL EDITAR ─────────────────────────────────────────────
+    async function abrirModalEditar(id) {
+        try {
+            const res = await fetch(`${api}/buscar/${id}`);
+            if (!res.ok) throw new Error("Não encontrado");
+            const u = await res.json();
+
+            document.getElementById("modalTitulo").textContent = "Editar Cadastro";
+            document.getElementById("editId").value    = u.id;
+            document.getElementById("editNome").value  = u.nome;
+            document.getElementById("editEmail").value = u.email;
+            document.getElementById("editSenha").value = "";
+            document.getElementById("editSenha").placeholder = "Nova senha (deixe vazio para manter)";
+            document.getElementById("senhaHint").textContent = "Deixe em branco para não alterar a senha.";
+            document.getElementById("editTipo").value  = u.tipo;
+            document.getElementById("modalOverlay").classList.add("aberto");
+        } catch (e) {
+            mostrarToast("Erro ao buscar cadastro: " + e.message, true);
+        }
+    }
+
+    // ── SALVAR (criar ou atualizar) ──────────────────────────────
+    async function salvarEdicao() {
+        const id    = document.getElementById("editId").value;
+        const nome  = document.getElementById("editNome").value.trim();
+        const email = document.getElementById("editEmail").value.trim();
+        const senha = document.getElementById("editSenha").value.trim();
+        const tipo  = document.getElementById("editTipo").value;
+
+        if (!nome || !email) {
+            mostrarToast("Preencha nome e email!", true);
+            return;
+        }
+
+        const dados = new URLSearchParams({ nome, email, tipo });
+        if (senha) dados.append("senha", senha);
+
+        try {
+            let res;
+            if (!id) {
+                // Novo cadastro
+                if (!senha) { mostrarToast("Informe uma senha para novo cadastro!", true); return; }
+                dados.append("senha", senha);
+                res = await fetch(`${api}/salvar`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: dados
+                });
+            } else {
+                // Atualizar existente
+                res = await fetch(`${api}/atualizar/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: dados
+                });
+            }
+
+            if (res.ok) {
+                fecharModal();
+                mostrarToast(id ? "Cadastro atualizado!" : "Cadastro criado!");
+                listar();
+            } else {
+                const msg = await res.text();
+                mostrarToast("Erro: " + msg, true);
+            }
+        } catch (e) {
+            mostrarToast("Erro na conexão: " + e.message, true);
+        }
+    }
+
+    // ── EXCLUIR ──────────────────────────────────────────────────
+    async function excluir(id) {
+        if (!confirm("Deseja excluir este cadastro?")) return;
+        try {
+            const res = await fetch(`${api}/deletar/${id}`, { method: "DELETE" });
+            if (res.ok) {
+                mostrarToast("Cadastro excluído!");
+                listar();
+            } else {
+                mostrarToast("Erro ao excluir.", true);
+            }
+        } catch (e) {
+            mostrarToast("Erro na conexão: " + e.message, true);
+        }
+    }
+
+    // ── MODAL HELPERS ────────────────────────────────────────────
+    function fecharModal() {
+        document.getElementById("modalOverlay").classList.remove("aberto");
+    }
+    function fecharModalFora(e) {
+        if (e.target === document.getElementById("modalOverlay")) fecharModal();
+    }
+
+    // ── TOAST ────────────────────────────────────────────────────
+    function mostrarToast(msg, erro = false) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast show" + (erro ? " erro" : "");
+        setTimeout(() => { t.className = "toast"; }, 3000);
+    }
+
+    // ── UTILS ────────────────────────────────────────────────────
+    function escHtml(str) {
+        return String(str)
+            .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+            .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    // ── INIT ─────────────────────────────────────────────────────
+    listar();
+</script>
+</body>
+</html>

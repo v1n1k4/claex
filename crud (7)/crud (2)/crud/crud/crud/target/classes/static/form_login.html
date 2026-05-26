@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>claex</title>
+    <style>
+        #msg-erro {
+            display: none;
+            background-color: #fdecea;
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 8px;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%       { transform: translateX(-8px); }
+            40%       { transform: translateX(8px); }
+            60%       { transform: translateX(-5px); }
+            80%       { transform: translateX(5px); }
+        }
+        .shake { animation: shake 0.4s ease; }
+        .submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    </style>
+</head>
+
+<body>
+    <main>
+        <section id="sect_login">
+            <article class="flex_colunm">
+                <img id="img_login" src="https://img.icons8.com/?size=100&id=TDMY9h1UHdNW&format=png&color=000000" alt="">
+                <h1 id="sumir">Bem-vindo a claex!</h1>
+            </article>
+            <article class="flex_colunm">
+                <h1>CLAEX</h1>
+
+                <div id="formulario_login">
+                    <input type="text" id="login" placeholder="nome de usuário">
+                    <input type="password" id="senha" placeholder="senha">
+
+                    <!-- caixa de erro aparece aqui -->
+                    <div id="msg-erro"></div>
+
+                    <!-- SEM o <a href> em volta, e com id="btnEntrar" -->
+                    <button type="button" class="submit" id="btnEntrar">Entrar</button>
+                </div>
+
+                <p>Não possui uma conta? <a href="form_cadastro.html">clique aqui</a></p>
+            </article>
+        </section>
+    </main>
+
+    <script>
+        const btnEntrar  = document.getElementById("btnEntrar");
+        const msgErro    = document.getElementById("msg-erro");
+        const inputLogin = document.getElementById("login");
+        const inputSenha = document.getElementById("senha");
+
+        inputLogin.addEventListener("input", () => msgErro.style.display = "none");
+        inputSenha.addEventListener("input", () => msgErro.style.display = "none");
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") btnEntrar.click();
+        });
+
+        function mostrarErro(texto) {
+            msgErro.textContent   = "❌ " + texto;
+            msgErro.style.display = "block";
+
+            const form = document.getElementById("formulario_login");
+            form.classList.remove("shake");
+            void form.offsetWidth;
+            form.classList.add("shake");
+        }
+
+        btnEntrar.addEventListener("click", async function () {
+
+            const loginDigitado = inputLogin.value.trim();
+            const senhaDigitada = inputSenha.value.trim();
+
+            if (loginDigitado === "" || senhaDigitada === "") {
+                mostrarErro("Preencha o usuário e a senha!");
+                return;
+            }
+
+            btnEntrar.disabled    = true;
+            btnEntrar.textContent = "Verificando...";
+            msgErro.style.display = "none";
+
+            const dados = new URLSearchParams();
+            dados.append("login", loginDigitado);
+            dados.append("senha", senhaDigitada);
+
+            try {
+                const response = await fetch("/login/entrar", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: dados
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    btnEntrar.textContent = "✔ Entrando...";
+                    window.location.href  = "listar_sala.html";
+
+                } else if (response.status === 404) {
+                    mostrarErro(data.erro || "Usuário não cadastrado!");
+
+                } else if (response.status === 401) {
+                    mostrarErro(data.erro || "Senha incorreta!");
+
+                } else {
+                    mostrarErro("Erro inesperado. Tente novamente.");
+                }
+
+            } catch (error) {
+                console.error(error);
+                mostrarErro("Erro ao conectar com o servidor!");
+
+            } finally {
+                if (document.getElementById("btnEntrar")) {
+                    btnEntrar.disabled    = false;
+                    btnEntrar.textContent = "Entrar";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
